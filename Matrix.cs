@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,12 +44,19 @@ namespace Matrix
 
         public double GetDeterminant()
         {
-            if (!IsMatrixSquare)
+            return GetDeterminant(this);
+        }
+
+        public static double GetDeterminant(Matrix m)
+        {
+            if (!m.IsMatrixSquare)
             {
                 throw new Exception("Matrix was not square");
             }
 
-            int[][] permutations = GetPermutations(Columns);
+            double[,] matrix = m.GetMatrix();
+
+            int[][] permutations = GetPermutations(m.Columns);
             int firstIndex = 0;
 
             double determinant = 0;
@@ -59,7 +67,7 @@ namespace Matrix
 
                 for (int j = 0; j < permutations[i].Length; j++)
                 {
-                    addition *= _matrix[firstIndex, permutations[i][j]];
+                    addition *= matrix[firstIndex, permutations[i][j]];
                     firstIndex += 1;
                 }
 
@@ -305,6 +313,72 @@ namespace Matrix
             }
 
             return new Matrix(transposedMatrix);
+        }
+
+        //public static Matrix GetAdjugateMatrix(Matrix m)
+        //{
+
+        //}
+
+        public double GetAlgebraicComplement(int rowIndex, int columnIndex)
+        {
+            return GetAlgebraicComplement(this, rowIndex, columnIndex);
+        }
+
+        public static double GetAlgebraicComplement(Matrix m, int rowIndex, int columnIndex)
+        {
+            if (rowIndex >= m.Rows || columnIndex >= m.Columns)
+            {
+                throw new Exception("Row and/or column index was outside the matrix' bounds");
+            }
+
+            return Math.Pow(-1, rowIndex + columnIndex) * GetMinor(m, rowIndex, columnIndex);
+        }
+
+        public double GetMinor(int rowIndex, int columnIndex)
+        {
+            return GetMinor(this, rowIndex, columnIndex);
+        }
+
+        public static double GetMinor(Matrix m, int rowIndex, int columnIndex)
+        {
+            if (rowIndex >= m.Rows || columnIndex >= m.Columns)
+            {
+                throw new Exception("Row and/or column index was outside the matrix' bounds");
+            }
+
+            double[,] initialArray = m.GetMatrix();
+            int rowsCount = initialArray.GetLength(0);
+            int columnsCount = initialArray.GetLength(1);
+
+            double[,] resultArray = new double[rowsCount - 1, columnsCount - 1];
+            int rowsCounter = 0;
+            int columnsCounter = 0;
+
+
+            for (int i = 0; i < rowsCount; i++)
+            {
+                if (i == rowIndex)
+                {
+                    continue;
+                }
+
+                for (int j = 0; j < columnsCount; j++)
+                {
+                    if (j == columnIndex)
+                    {
+                        continue;
+                    }
+
+                    resultArray[rowsCounter, columnsCounter] = initialArray[i, j];
+                    columnsCounter++;
+                }
+
+                rowsCounter++;
+                columnsCounter = 0;
+            }
+
+            return GetDeterminant(new Matrix(resultArray));
         }
 
         public double[,] GetMatrix()
