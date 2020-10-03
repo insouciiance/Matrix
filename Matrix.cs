@@ -22,11 +22,52 @@ namespace Matrix
             _matrix = matrix ?? new double[0, 0];
         }
 
-        public int GetDeterminant()
+        public double GetDeterminant()
         {
             if (!IsMatrixSquare)
             {
                 throw new Exception("Matrix was not square");
+            }
+
+            int[][] permutations = GetPermutations(Columns);
+            int firstIndex = 0;
+
+            double determinant = 0;
+
+            for (int i = 0; i < permutations.Length; i++)
+            {
+                double addition = Math.Pow(-1, GetInversions(permutations[i]));
+
+                for (int j = 0; j < permutations[i].Length; j++)
+                {
+                    addition *= _matrix[firstIndex, permutations[i][j]];
+                    firstIndex += 1;
+                }
+
+                determinant += addition;
+                firstIndex = 0;
+            }
+
+            return determinant;
+
+            int GetInversions(int[] array)
+            {
+                if (array.Length == 1) return 0;
+
+                int inversionsCount = 0;
+
+                for (int i = 0; i < array.Length; i++)
+                {
+                    for (int j = i + 1; j < array.Length; j++)
+                    {
+                        if (array[i] > array[j])
+                        {
+                            inversionsCount++;
+                        }
+                    }
+                }
+
+                return inversionsCount;
             }
 
             int[][] GetPermutations(int indexesCount)
@@ -38,7 +79,7 @@ namespace Matrix
 
                 for (int i = 0; i < indexesCount; i++)
                 {
-                    arrayToPermute[i] = i + 1;
+                    arrayToPermute[i] = i;
                 }
 
                 void Swap(int index1, int index2)
@@ -73,8 +114,6 @@ namespace Matrix
 
                 return permutationsArray;
             }
-
-            return GetPermutations(3);
         }
 
         public Matrix Sum(Matrix other)

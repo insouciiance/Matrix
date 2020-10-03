@@ -14,12 +14,12 @@ namespace Matrix
         {
             Matrix m1 = new Matrix(new double[,]
             {
-                {1, 2, 3 },
-                {4, 5, 6 },
-                {7, 8, 9 }
+                {23, 23},
+                {5, 22 },
             });
 
-            Console.WriteLine(m1.Sum(m1));
+            Console.WriteLine(m1.PowerOf(100));
+            Console.WriteLine(m1.PowerOf(100).GetDeterminant());
 
             Console.ReadKey();
         }
