@@ -19,7 +19,26 @@ namespace Matrix
 
         public Matrix(double[,] matrix)
         {
-            _matrix = matrix ?? new double[0, 0];
+            if (matrix == null)
+            {
+                _matrix = new double[0, 0];
+                return;
+            }
+
+            int matrixRows = matrix.GetLength(0);
+            int matrixColumns = matrix.GetLength(1);
+
+            double[,] copy = new double[matrixRows, matrixColumns];
+
+            for (int i = 0; i < matrixRows; i++)
+            {
+                for (int j = 0; j < matrixColumns; j++)
+                {
+                    copy[i, j] = matrix[i, j];
+                }
+            }
+
+            _matrix = copy;
         }
 
         public double GetDeterminant()
@@ -177,6 +196,26 @@ namespace Matrix
             return new Matrix(resultMatrix);
         }
 
+        public Matrix Multiply(double amount)
+        {
+            return Multiply(this, amount);
+        }
+
+        public static Matrix Multiply(Matrix m, double amount)
+        {
+            double[,] matrix = m.GetMatrix();
+
+            for (int i = 0; i < m.Rows; i++)
+            {
+                for (int j = 0; j < m.Columns; j++)
+                {
+                    matrix[i, j] = amount * matrix[i, j];
+                }
+            }
+
+            return new Matrix(matrix);
+        }
+
         private static double[] GetMatrixRow(Matrix m, int rowIndex)
         {
             double[,] matrix = m.GetMatrix();
@@ -245,6 +284,27 @@ namespace Matrix
             }
             if (pow == 1) return new Matrix(GetMatrix());
             return Multiply(PowerOf(pow - 1), new Matrix(GetMatrix()));
+        }
+
+        public Matrix Transpose()
+        {
+            return Transpose(this);
+        }
+
+        public static Matrix Transpose(Matrix m)
+        {
+            double[,] transposedMatrix = new double[m.Columns, m.Rows];
+            double[,] matrixToTranspose = m.GetMatrix();
+
+            for (int i = 0; i < transposedMatrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < transposedMatrix.GetLength(1); j++)
+                {
+                    transposedMatrix[i, j] = matrixToTranspose[j, i];
+                }
+            }
+
+            return new Matrix(transposedMatrix);
         }
 
         public double[,] GetMatrix()

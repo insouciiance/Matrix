@@ -26,7 +26,7 @@ namespace Matrix
                 {3, 2, 1, 4},
             });
 
-            Console.WriteLine(m1.Sum(m2));
+            Console.WriteLine(Matrix.Transpose(m2));
 
             Console.ReadKey();
         }
