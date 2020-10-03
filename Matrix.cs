@@ -22,60 +22,99 @@ namespace Matrix
             _matrix = matrix ?? new double[0, 0];
         }
 
-        //public int GetDeterminant()
-        //{
-        //    if (!IsMatrixSquare)
-        //    {
-        //        throw new Exception("Matrix was not square");
-        //    }
+        public double GetDeterminant()
+        {
+            if (!IsMatrixSquare)
+            {
+                throw new Exception("Matrix was not square");
+            }
 
-        //    int[][] GetPermutations(int indexesCount)
-        //    {
-        //        int[][] permutationsArray = new int[Factorial(indexesCount)][];
-        //        int currentArrayIndex = 0;
+            int[][] permutations = GetPermutations(Columns);
+            int firstIndex = 0;
 
-        //        int[] arrayToPermute = new int[indexesCount];
+            double determinant = 0;
 
-        //        for (int i = 0; i < indexesCount; i++)
-        //        {
-        //            arrayToPermute[i] = i + 1;
-        //        }
+            for (int i = 0; i < permutations.Length; i++)
+            {
+                double addition = Math.Pow(-1, GetInversions(permutations[i]));
 
-        //        void Swap(int index1, int index2)
-        //        {
-        //            int temp = arrayToPermute[index1];
-        //            arrayToPermute[index1] = arrayToPermute[index2];
-        //            arrayToPermute[index2] = temp;
-        //        }
+                for (int j = 0; j < permutations[i].Length; j++)
+                {
+                    addition *= _matrix[firstIndex, permutations[i][j]];
+                    firstIndex += 1;
+                }
 
-        //        void Permute(int num)
-        //        {
-        //            int[] permutedArray = new int[indexesCount];
+                determinant += addition;
+                firstIndex = 0;
+            }
 
-        //            if (num == 1)
-        //            {
-        //                Array.Copy(arrayToPermute, permutedArray, indexesCount);
-        //                permutationsArray[currentArrayIndex++] = permutedArray;
-        //            }
-        //            else
-        //            {
-        //                for (int i = 0; i < num; i++)
-        //                {
-        //                    Permute(num - 1);
-        //                    Swap(num % 2 == 0 ? 0 : i, num - 1);
-        //                }
-        //            }
-        //        }
+            return determinant;
 
-        //        int Factorial(int x) => x == 0 ? 1 : Factorial(x - 1) * x;
+            int GetInversions(int[] array)
+            {
+                if (array.Length == 1) return 0;
 
-        //        Permute(indexesCount);
+                int inversionsCount = 0;
 
-        //        return permutationsArray;
-        //    }
+                for (int i = 0; i < array.Length; i++)
+                {
+                    for (int j = i + 1; j < array.Length; j++)
+                    {
+                        if (array[i] > array[j])
+                        {
+                            inversionsCount++;
+                        }
+                    }
+                }
 
-        //    return GetPermutations(3);
-        //}
+                return inversionsCount;
+            }
+
+            int[][] GetPermutations(int indexesCount)
+            {
+                int[][] permutationsArray = new int[Factorial(indexesCount)][];
+                int currentArrayIndex = 0;
+
+                int[] arrayToPermute = new int[indexesCount];
+
+                for (int i = 0; i < indexesCount; i++)
+                {
+                    arrayToPermute[i] = i;
+                }
+
+                void Swap(int index1, int index2)
+                {
+                    int temp = arrayToPermute[index1];
+                    arrayToPermute[index1] = arrayToPermute[index2];
+                    arrayToPermute[index2] = temp;
+                }
+
+                void Permute(int num)
+                {
+                    int[] permutedArray = new int[indexesCount];
+
+                    if (num == 1)
+                    {
+                        Array.Copy(arrayToPermute, permutedArray, indexesCount);
+                        permutationsArray[currentArrayIndex++] = permutedArray;
+                    }
+                    else
+                    {
+                        for (int i = 0; i < num; i++)
+                        {
+                            Permute(num - 1);
+                            Swap(num % 2 == 0 ? 0 : i, num - 1);
+                        }
+                    }
+                }
+
+                int Factorial(int x) => x == 0 ? 1 : Factorial(x - 1) * x;
+
+                Permute(indexesCount);
+
+                return permutationsArray;
+            }
+        }
 
         public Matrix Sum(Matrix other)
         {
