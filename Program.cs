@@ -26,17 +26,7 @@ namespace Matrix
                 {3, 2, 1, 4},
             });
 
-            double[,] array = new double[1, 1]
-            {
-                {4},
-            };
-
-            Matrix m3 = new Matrix(array);
-
-            array[0, 0] = 123;
-
-            Matrix m4 = new Matrix(null);
-            Console.WriteLine(m4);
+            Console.WriteLine(Matrix.Multiply(m2, 3));
 
             Console.ReadKey();
         }

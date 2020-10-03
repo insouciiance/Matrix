@@ -196,6 +196,11 @@ namespace Matrix
             return new Matrix(resultMatrix);
         }
 
+        public Matrix Multiply(double amount)
+        {
+            return Multiply(this, amount);
+        }
+
         public static Matrix Multiply(Matrix m, double amount)
         {
             double[,] matrix = m.GetMatrix();
