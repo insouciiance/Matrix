@@ -6,6 +6,7 @@ using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Security.Policy;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Matrix
@@ -211,6 +212,11 @@ namespace Matrix
 
         public static Matrix Multiply(Matrix m, double amount)
         {
+            if (m == null)
+            {
+                throw new Exception("Matrix was null");
+            }
+
             double[,] matrix = m.GetMatrix();
 
             for (int i = 0; i < m.Rows; i++)
@@ -226,6 +232,16 @@ namespace Matrix
 
         private static double[] GetMatrixRow(Matrix m, int rowIndex)
         {
+            if (m == null)
+            {
+                throw new Exception("Matrix was null");
+            }
+
+            if (rowIndex >= m.Rows || rowIndex < 0)
+            {
+                throw new Exception("\"rowIndex\" was outside matrix' bounds");
+            }
+
             double[,] matrix = m.GetMatrix();
             double[] res = new double[m.Columns];
 
@@ -239,6 +255,16 @@ namespace Matrix
 
         private static double[] GetMatrixColumn(Matrix m, int columnIndex)
         {
+            if (m == null)
+            {
+                throw new Exception("Matrix was null");
+            }
+
+            if (columnIndex >= m.Columns || columnIndex < 0)
+            {
+                throw new Exception("\"columnIndex\" was outside matrix' bounds");
+            }
+
             double[,] matrix = m.GetMatrix();
             double[] res = new double[m.Rows];
 
@@ -252,6 +278,11 @@ namespace Matrix
 
         private static double[] SumArrays(double[] array1, double[] array2)
         {
+            if (array1 == null || array2 == null)
+            {
+                throw new Exception("Array was null");
+            }
+
             if (array1.Length != array2.Length)
             {
                 throw new Exception("Arrays did not match sum rules.");
@@ -269,6 +300,11 @@ namespace Matrix
 
         private static double[] MultiplyArrays(double[] array1, double[] array2)
         {
+            if (array1 == null || array2 == null)
+            {
+                throw new Exception("Array was null");
+            }
+
             if (array1.Length != array2.Length)
             {
                 throw new Exception("Arrays did not match multiplication rules.");
@@ -286,12 +322,29 @@ namespace Matrix
 
         public Matrix PowerOf(int pow)
         {
-            if (!IsMatrixSquare)
+            return PowerOf(this, pow);
+        }
+
+        public static Matrix PowerOf(Matrix m, int pow)
+        {
+            if (m == null)
+            {
+                throw new Exception("Matrix was null");
+            }
+
+            if (!m.IsMatrixSquare)
             {
                 throw new Exception("Matrix was not square");
             }
-            if (pow == 1) return new Matrix(GetMatrix());
-            return Multiply(PowerOf(pow - 1), new Matrix(GetMatrix()));
+
+            if (pow < 1)
+            {
+                throw new Exception("Matrix' power can not be less than 1");
+            }
+
+            if (pow == 1) return new Matrix(m.GetMatrix());
+
+            return Multiply(PowerOf(m, pow - 1), new Matrix(m.GetMatrix()));
         }
 
         public Matrix Transpose()
@@ -301,6 +354,11 @@ namespace Matrix
 
         public static Matrix Transpose(Matrix m)
         {
+            if (m == null)
+            {
+                throw new Exception("Matrix was null");
+            }
+
             double[,] transposedMatrix = new double[m.Columns, m.Rows];
             double[,] matrixToTranspose = m.GetMatrix();
 
@@ -322,6 +380,11 @@ namespace Matrix
 
         public static Matrix GetAdjugateMatrix(Matrix m)
         {
+            if (m == null)
+            {
+                throw new Exception("Matrix was null");
+            }
+
             double[,] matrix = m.GetMatrix();
 
             for (int i = 0; i < m.Rows; i++)
@@ -342,6 +405,11 @@ namespace Matrix
 
         public static double GetAlgebraicComplement(Matrix m, int rowIndex, int columnIndex)
         {
+            if (m == null)
+            {
+                throw new Exception("Matrix was null");
+            }
+
             if (rowIndex >= m.Rows || columnIndex >= m.Columns)
             {
                 throw new Exception("Row and/or column index was outside the matrix' bounds");
@@ -357,6 +425,11 @@ namespace Matrix
 
         public static double GetMinor(Matrix m, int rowIndex, int columnIndex)
         {
+            if (m == null)
+            {
+                throw new Exception("Matrix was null");
+            }
+
             if (rowIndex >= m.Rows || columnIndex >= m.Columns)
             {
                 throw new Exception("Row and/or column index was outside the matrix' bounds");
