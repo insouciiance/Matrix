@@ -320,6 +320,11 @@ namespace Matrix
 
         //}
 
+        public double GetAlgebraicComplement(int rowIndex, int columnIndex)
+        {
+            return GetAlgebraicComplement(this, rowIndex, columnIndex);
+        }
+
         public static double GetAlgebraicComplement(Matrix m, int rowIndex, int columnIndex)
         {
             if (rowIndex >= m.Rows || columnIndex >= m.Columns)
@@ -328,6 +333,11 @@ namespace Matrix
             }
 
             return Math.Pow(-1, rowIndex + columnIndex) * GetMinor(m, rowIndex, columnIndex);
+        }
+
+        public double GetMinor(int rowIndex, int columnIndex)
+        {
+            return GetMinor(this, rowIndex, columnIndex);
         }
 
         public static double GetMinor(Matrix m, int rowIndex, int columnIndex)

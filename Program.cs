@@ -33,7 +33,7 @@ namespace Matrix
                 {5, 3, 0 }
             });
 
-            Console.WriteLine(Matrix.GetAlgebraicComplement(m3, 0, 1));
+            Console.WriteLine(m3.GetAlgebraicComplement(0, 1));
 
             Console.ReadKey();
         }
