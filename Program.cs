@@ -26,7 +26,14 @@ namespace Matrix
                 {3, 2, 1, 4},
             });
 
-            Console.WriteLine(Matrix.Transpose(m2));
+            Matrix m3 = new Matrix(new double[,]
+            {
+                {1, 2, 2 },
+                {3, 4, 6 },
+                {5, 3, 0 }
+            });
+
+            Console.WriteLine(m3.GetAdjugateMatrix());
 
             Console.ReadKey();
         }
