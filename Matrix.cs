@@ -347,30 +347,27 @@ namespace Matrix
             return Multiply(PowerOf(m, pow - 1), new Matrix(m.GetMatrix()));
         }
 
-        public Matrix Transpose()
+        public Matrix GetInverseMatrix()
         {
-            return Transpose(this);
+            return GetInverseMatrix(this);
         }
 
-        public static Matrix Transpose(Matrix m)
+        public static Matrix GetInverseMatrix(Matrix m)
         {
             if (m == null)
             {
                 throw new Exception("Matrix was null");
             }
 
-            double[,] transposedMatrix = new double[m.Columns, m.Rows];
-            double[,] matrixToTranspose = m.GetMatrix();
-
-            for (int i = 0; i < transposedMatrix.GetLength(0); i++)
+            if (!m.IsMatrixSquare)
             {
-                for (int j = 0; j < transposedMatrix.GetLength(1); j++)
-                {
-                    transposedMatrix[i, j] = matrixToTranspose[j, i];
-                }
+                throw new Exception("Matrix was not square");
             }
 
-            return new Matrix(transposedMatrix);
+            Matrix adjugateMatrix = m.GetAdjugateMatrix();
+            Matrix inverseMatrix = adjugateMatrix.Multiply(1 / m.GetDeterminant());
+
+            return inverseMatrix;
         }
 
         public Matrix GetAdjugateMatrix()
@@ -396,6 +393,32 @@ namespace Matrix
             }
 
             return new Matrix(matrix).Transpose();
+        }
+
+        public Matrix Transpose()
+        {
+            return Transpose(this);
+        }
+
+        public static Matrix Transpose(Matrix m)
+        {
+            if (m == null)
+            {
+                throw new Exception("Matrix was null");
+            }
+
+            double[,] transposedMatrix = new double[m.Columns, m.Rows];
+            double[,] matrixToTranspose = m.GetMatrix();
+
+            for (int i = 0; i < transposedMatrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < transposedMatrix.GetLength(1); j++)
+                {
+                    transposedMatrix[i, j] = matrixToTranspose[j, i];
+                }
+            }
+
+            return new Matrix(transposedMatrix);
         }
 
         public double GetAlgebraicComplement(int rowIndex, int columnIndex)
