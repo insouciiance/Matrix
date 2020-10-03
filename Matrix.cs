@@ -22,60 +22,60 @@ namespace Matrix
             _matrix = matrix ?? new double[0, 0];
         }
 
-        //public int GetDeterminant()
-        //{
-        //    if (!IsMatrixSquare)
-        //    {
-        //        throw new Exception("Matrix was not square");
-        //    }
+        public int GetDeterminant()
+        {
+            if (!IsMatrixSquare)
+            {
+                throw new Exception("Matrix was not square");
+            }
 
-        //    int[][] GetPermutations(int indexesCount)
-        //    {
-        //        int[][] permutationsArray = new int[Factorial(indexesCount)][];
-        //        int currentArrayIndex = 0;
+            int[][] GetPermutations(int indexesCount)
+            {
+                int[][] permutationsArray = new int[Factorial(indexesCount)][];
+                int currentArrayIndex = 0;
 
-        //        int[] arrayToPermute = new int[indexesCount];
+                int[] arrayToPermute = new int[indexesCount];
 
-        //        for (int i = 0; i < indexesCount; i++)
-        //        {
-        //            arrayToPermute[i] = i + 1;
-        //        }
+                for (int i = 0; i < indexesCount; i++)
+                {
+                    arrayToPermute[i] = i + 1;
+                }
 
-        //        void Swap(int index1, int index2)
-        //        {
-        //            int temp = arrayToPermute[index1];
-        //            arrayToPermute[index1] = arrayToPermute[index2];
-        //            arrayToPermute[index2] = temp;
-        //        }
+                void Swap(int index1, int index2)
+                {
+                    int temp = arrayToPermute[index1];
+                    arrayToPermute[index1] = arrayToPermute[index2];
+                    arrayToPermute[index2] = temp;
+                }
 
-        //        void Permute(int num)
-        //        {
-        //            int[] permutedArray = new int[indexesCount];
+                void Permute(int num)
+                {
+                    int[] permutedArray = new int[indexesCount];
 
-        //            if (num == 1)
-        //            {
-        //                Array.Copy(arrayToPermute, permutedArray, indexesCount);
-        //                permutationsArray[currentArrayIndex++] = permutedArray;
-        //            }
-        //            else
-        //            {
-        //                for (int i = 0; i < num; i++)
-        //                {
-        //                    Permute(num - 1);
-        //                    Swap(num % 2 == 0 ? 0 : i, num - 1);
-        //                }
-        //            }
-        //        }
+                    if (num == 1)
+                    {
+                        Array.Copy(arrayToPermute, permutedArray, indexesCount);
+                        permutationsArray[currentArrayIndex++] = permutedArray;
+                    }
+                    else
+                    {
+                        for (int i = 0; i < num; i++)
+                        {
+                            Permute(num - 1);
+                            Swap(num % 2 == 0 ? 0 : i, num - 1);
+                        }
+                    }
+                }
 
-        //        int Factorial(int x) => x == 0 ? 1 : Factorial(x - 1) * x;
+                int Factorial(int x) => x == 0 ? 1 : Factorial(x - 1) * x;
 
-        //        Permute(indexesCount);
+                Permute(indexesCount);
 
-        //        return permutationsArray;
-        //    }
+                return permutationsArray;
+            }
 
-        //    return GetPermutations(3);
-        //}
+            return GetPermutations(3);
+        }
 
         public Matrix Sum(Matrix other)
         {
