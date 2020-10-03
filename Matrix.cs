@@ -367,8 +367,6 @@ namespace Matrix
             Matrix adjugateMatrix = m.GetAdjugateMatrix();
             Matrix inverseMatrix = adjugateMatrix.Multiply(1 / m.GetDeterminant());
 
-            Console.WriteLine(inverseMatrix);
-
             return inverseMatrix;
         }
 
