@@ -315,10 +315,25 @@ namespace Matrix
             return new Matrix(transposedMatrix);
         }
 
-        //public static Matrix GetAdjugateMatrix(Matrix m)
-        //{
+        public Matrix GetAdjugateMatrix()
+        {
+            return GetAdjugateMatrix(this);
+        }
 
-        //}
+        public static Matrix GetAdjugateMatrix(Matrix m)
+        {
+            double[,] matrix = m.GetMatrix();
+
+            for (int i = 0; i < m.Rows; i++)
+            {
+                for (int j = 0; j < m.Columns; j++)
+                {
+                    matrix[i, j] = m.GetAlgebraicComplement(i, j);
+                }
+            }
+
+            return new Matrix(matrix).Transpose();
+        }
 
         public double GetAlgebraicComplement(int rowIndex, int columnIndex)
         {
@@ -347,11 +362,11 @@ namespace Matrix
                 throw new Exception("Row and/or column index was outside the matrix' bounds");
             }
 
-            double[,] initialArray = m.GetMatrix();
-            int rowsCount = initialArray.GetLength(0);
-            int columnsCount = initialArray.GetLength(1);
+            double[,] initialMatrix = m.GetMatrix();
+            int rowsCount = initialMatrix.GetLength(0);
+            int columnsCount = initialMatrix.GetLength(1);
 
-            double[,] resultArray = new double[rowsCount - 1, columnsCount - 1];
+            double[,] resultMatrix = new double[rowsCount - 1, columnsCount - 1];
             int rowsCounter = 0;
             int columnsCounter = 0;
 
@@ -370,7 +385,7 @@ namespace Matrix
                         continue;
                     }
 
-                    resultArray[rowsCounter, columnsCounter] = initialArray[i, j];
+                    resultMatrix[rowsCounter, columnsCounter] = initialMatrix[i, j];
                     columnsCounter++;
                 }
 
@@ -378,7 +393,7 @@ namespace Matrix
                 columnsCounter = 0;
             }
 
-            return GetDeterminant(new Matrix(resultArray));
+            return GetDeterminant(new Matrix(resultMatrix));
         }
 
         public double[,] GetMatrix()
