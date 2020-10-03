@@ -19,7 +19,26 @@ namespace Matrix
 
         public Matrix(double[,] matrix)
         {
-            _matrix = matrix ?? new double[0, 0];
+            if (matrix == null)
+            {
+                _matrix = new double[0, 0];
+                return;
+            }
+
+            int matrixRows = matrix.GetLength(0);
+            int matrixColumns = matrix.GetLength(1);
+
+            double[,] copy = new double[matrixRows, matrixColumns];
+
+            for (int i = 0; i < matrixRows; i++)
+            {
+                for (int j = 0; j < matrixColumns; j++)
+                {
+                    copy[i, j] = matrix[i, j];
+                }
+            }
+
+            _matrix = copy;
         }
 
         public double GetDeterminant()
@@ -175,6 +194,21 @@ namespace Matrix
             }
 
             return new Matrix(resultMatrix);
+        }
+
+        public static Matrix Multiply(Matrix m, double amount)
+        {
+            double[,] matrix = m.GetMatrix();
+
+            for (int i = 0; i < m.Rows; i++)
+            {
+                for (int j = 0; j < m.Columns; j++)
+                {
+                    matrix[i, j] = amount * matrix[i, j];
+                }
+            }
+
+            return new Matrix(matrix);
         }
 
         private static double[] GetMatrixRow(Matrix m, int rowIndex)
