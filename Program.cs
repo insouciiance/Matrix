@@ -28,10 +28,7 @@ namespace Matrix
 
             Matrix m3 = new Matrix(new double[,]
             {
-                {1, 2, 2, 12 },
-                {3, 4, 6, 53 },
-                {5, 3, 0, 221 },
-                {11, 92, 1, 1 }
+
             });
 
             Console.WriteLine(m3.Multiply(m3.GetInverseMatrix()));

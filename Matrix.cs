@@ -55,6 +55,11 @@ namespace Matrix
                 throw new Exception("Matrix was not square");
             }
 
+            if (m.Rows == 0)
+            {
+                return 0;
+            }
+
             double[,] matrix = m.GetMatrix();
 
             int[][] permutations = GetPermutations(m.Columns);
