@@ -33,8 +33,9 @@ namespace Matrix
                 {5, 3, 0 }
             });
 
-            Console.WriteLine(Matrix.PowerOf(m3, 0));
-            Console.WriteLine(Matrix.Multiply(m3, m3));
+            Console.WriteLine(m3.GetAdjugateMatrix());
+            Console.WriteLine(m3.GetDeterminant());
+            Console.WriteLine(m3.GetInverseMatrix());
 
             Console.ReadKey();
         }
