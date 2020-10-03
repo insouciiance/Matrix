@@ -128,7 +128,7 @@ namespace Matrix
                 throw new Exception("Matrix did not match sum rules.");
             }
 
-            double[,] resultMatrix = new double[m1.Columns, m1.Rows];
+            double[,] resultMatrix = new double[m1.Rows, m1.Columns];
 
             for (int i = 0; i < m1.Rows; i++)
             {
