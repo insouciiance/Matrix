@@ -26,7 +26,7 @@ namespace Matrix
                 {3, 2, 1, 4},
             });
 
-            Console.WriteLine(Matrix.Multiply(m2, 3));
+            Console.WriteLine(Matrix.Transpose(m2));
 
             Console.ReadKey();
         }

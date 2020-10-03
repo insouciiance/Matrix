@@ -286,6 +286,27 @@ namespace Matrix
             return Multiply(PowerOf(pow - 1), new Matrix(GetMatrix()));
         }
 
+        public Matrix Transpose()
+        {
+            return Transpose(this);
+        }
+
+        public static Matrix Transpose(Matrix m)
+        {
+            double[,] transposedMatrix = new double[m.Columns, m.Rows];
+            double[,] matrixToTranspose = m.GetMatrix();
+
+            for (int i = 0; i < transposedMatrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < transposedMatrix.GetLength(1); j++)
+                {
+                    transposedMatrix[i, j] = matrixToTranspose[j, i];
+                }
+            }
+
+            return new Matrix(transposedMatrix);
+        }
+
         public double[,] GetMatrix()
         {
             int columnsCount = _matrix.GetLength(0);
