@@ -198,7 +198,7 @@ namespace Matrix
                     double[] multipliedArray = MultiplyArrays(firstMatrixRow, secondMatrixColumn);
                     double multipliedArraySum = multipliedArray.Sum();
 
-                    resultMatrix[i, j] = multipliedArraySum;
+                    resultMatrix[i, j] = Math.Round(multipliedArraySum, 2);
                 }
             }
 
@@ -366,6 +366,8 @@ namespace Matrix
 
             Matrix adjugateMatrix = m.GetAdjugateMatrix();
             Matrix inverseMatrix = adjugateMatrix.Multiply(1 / m.GetDeterminant());
+
+            Console.WriteLine(inverseMatrix);
 
             return inverseMatrix;
         }
