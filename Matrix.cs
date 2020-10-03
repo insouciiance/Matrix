@@ -203,7 +203,7 @@ namespace Matrix
                     double[] multipliedArray = MultiplyArrays(firstMatrixRow, secondMatrixColumn);
                     double multipliedArraySum = multipliedArray.Sum();
 
-                    resultMatrix[i, j] = Math.Round(multipliedArraySum, 2);
+                    resultMatrix[i, j] = Math.Round(multipliedArraySum, 10);
                 }
             }
 
@@ -367,6 +367,11 @@ namespace Matrix
             if (!m.IsMatrixSquare)
             {
                 throw new Exception("Matrix was not square");
+            }
+
+            if (Math.Abs(m.GetDeterminant()) < 0.0001)
+            {
+                throw new Exception("Matrix was not invertible");
             }
 
             Matrix adjugateMatrix = m.GetAdjugateMatrix();

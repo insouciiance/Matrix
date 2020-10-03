@@ -21,17 +21,12 @@ namespace Matrix
 
             Matrix m2 = new Matrix(new double[,]
             {
-                {2, 1, -1, 3},
-                {4, 3, 1, 8 },
-                {3, 2, 1, 4},
+                {2.121212, 1, -1},
+                {4, 3, 1},
+                {3, 2, 1},
             });
 
-            Matrix m3 = new Matrix(new double[,]
-            {
-
-            });
-
-            Console.WriteLine(m3.Multiply(m3.GetInverseMatrix()));
+            Console.WriteLine(m2.Multiply(m2));
 
             Console.ReadKey();
         }
