@@ -349,7 +349,7 @@ namespace Matrix
 
             if (pow == 1) return new Matrix(m.GetMatrix());
 
-            return Multiply(PowerOf(m, pow - 1), new Matrix(m.GetMatrix()));
+            return Multiply(PowerOf(m, pow - 1), m);
         }
 
         public Matrix GetInverseMatrix()
