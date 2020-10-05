@@ -43,6 +43,46 @@ namespace Matrix
             _matrix = copy;
         }
 
+        public Matrix(params double[] inputArray)
+        {
+            inputArray = inputArray ?? new double[1];
+
+            if (inputArray.Length == 0)
+            {
+                inputArray = new double[1];
+            }
+
+            int arrayLength = inputArray.Length;
+            int sizeDivider = (int)Math.Sqrt(arrayLength);
+
+            while (sizeDivider > 0) 
+            {
+                if (arrayLength % sizeDivider == 0)
+                {
+                    break;
+                }
+
+                sizeDivider--;
+            }
+
+            int rowsCount = sizeDivider;
+            int columnsCount = arrayLength / rowsCount;
+
+            double[,] matrix = new double[rowsCount, columnsCount];
+            int indexCounter = 0;
+
+            for (int i = 0; i < rowsCount; i++)
+            {
+                for (int j = 0; j < columnsCount; j++)
+                {
+                    matrix[i, j] = inputArray[indexCounter];
+                    indexCounter++;
+                }
+            }
+
+            _matrix = matrix;
+        }
+
         public double GetDeterminant()
         {
             return GetDeterminant(this);
