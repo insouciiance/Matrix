@@ -83,6 +83,52 @@ namespace Matrix
             _matrix = matrix;
         }
 
+        public static int GetRank(Matrix m)
+        {
+            int rank = 0;
+            double[,] matrix = m.GetMatrix();
+
+            for (int i = 1; i <= Math.Min(m.Rows, m.Columns); i++)
+            {
+                if (CheckForRank(i))
+                {
+                    rank = i;
+                }
+                else
+                {
+                    return rank;
+                }
+            }
+
+            return rank;
+
+            bool CheckForRank(int rankNumber)
+            {
+                double[,] matrixPart = new double[rankNumber, rankNumber];
+
+                for (int i = 0; i <= m.Rows - rankNumber; i++)
+                {
+                    for (int j = 0; j <= m.Columns - rankNumber; j++)
+                    {
+                        for (int k = i; k < i + rankNumber; k++)
+                        {
+                            for (int l = j; l < j + rankNumber; l++)
+                            {
+                                matrixPart[k - i, l - j] = matrix[k, l];
+                            }
+                        }
+
+                        if (Math.Abs(new Matrix(matrixPart).GetDeterminant()) > 0.0001)
+                        {
+                            return true;
+                        } 
+                    }
+                }
+
+                return false;
+            }
+        }
+
         public double GetDeterminant()
         {
             return GetDeterminant(this);
