@@ -83,6 +83,11 @@ namespace Matrix
             _matrix = matrix;
         }
 
+        public int GetRank()
+        {
+            return GetRank(this);
+        }
+
         public static int GetRank(Matrix m)
         {
             int rank = 0;
