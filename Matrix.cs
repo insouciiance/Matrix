@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
-using System.Security.Policy;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Matrix
 {
@@ -18,6 +13,53 @@ namespace Matrix
         public int Rows => _matrix.GetLength(0);
         public int Columns => _matrix.GetLength(1);
         public bool IsMatrixSquare => Rows == Columns;
+        public bool IsMatrixZero
+        {
+            get
+            {
+                for (int i = 0; i < this.Rows; i++)
+                {
+                    for (int j = 0; j < this.Columns; j++)
+                    {
+                        if (_matrix[i, j] != 0)
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            }
+        }
+        public bool IsMatrixIdentity
+        {
+            get
+            {
+                if (!IsMatrixSquare)
+                {
+                    return false;
+                }
+
+                for (int i = 0; i < this.Rows; i++)
+                {
+                    for (int j = 0; j < this.Columns; j++)
+                    {
+                        if (i != j && Math.Abs(_matrix[i, j]) > 0.0001)
+                        {
+                            return false;
+                        }
+
+                        if (i == j && Math.Abs(_matrix[i, j] - 1) > 0.0001)
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            }
+        }
+        public int Rank => GetRank();
 
         public Matrix(double[,] matrix)
         {
@@ -55,7 +97,7 @@ namespace Matrix
             int arrayLength = inputArray.Length;
             int sizeDivider = (int)Math.Sqrt(arrayLength);
 
-            while (sizeDivider > 0) 
+            while (sizeDivider > 0)
             {
                 if (arrayLength % sizeDivider == 0)
                 {
@@ -126,7 +168,7 @@ namespace Matrix
                         if (Math.Abs(new Matrix(matrixPart).GetDeterminant()) > 0.0001)
                         {
                             return true;
-                        } 
+                        }
                     }
                 }
 
@@ -243,7 +285,7 @@ namespace Matrix
         public Matrix Sum(Matrix other)
         {
             return Sum(this, other);
-        } 
+        }
 
         public static Matrix Sum(Matrix m1, Matrix m2)
         {
@@ -258,6 +300,36 @@ namespace Matrix
             {
                 double[] firstMatrixRow = GetMatrixRow(m1, i);
                 double[] secondMatrixRow = GetMatrixRow(m2, i);
+
+                double[] sumArray = SumArrays(firstMatrixRow, secondMatrixRow);
+
+                for (int j = 0; j < sumArray.Length; j++)
+                {
+                    resultMatrix[i, j] = sumArray[j];
+                }
+            }
+
+            return new Matrix(resultMatrix);
+        }
+
+        public Matrix Subtract(Matrix other)
+        {
+            return Subtract(this, other);
+        }
+
+        public static Matrix Subtract(Matrix m1, Matrix m2)
+        {
+            if (m1.Rows != m2.Rows || m1.Columns != m2.Columns)
+            {
+                throw new Exception("Matrix did not match subtraction rules.");
+            }
+
+            double[,] resultMatrix = new double[m1.Rows, m1.Columns];
+
+            for (int i = 0; i < m1.Rows; i++)
+            {
+                double[] firstMatrixRow = GetMatrixRow(m1, i);
+                double[] secondMatrixRow = GetMatrixRow(m2, i).Select(x => -x).ToArray();
 
                 double[] sumArray = SumArrays(firstMatrixRow, secondMatrixRow);
 
@@ -294,7 +366,7 @@ namespace Matrix
                     double[] multipliedArray = MultiplyArrays(firstMatrixRow, secondMatrixColumn);
                     double multipliedArraySum = multipliedArray.Sum();
 
-                    resultMatrix[i, j] = Math.Round(multipliedArraySum, 10);
+                    resultMatrix[i, j] = multipliedArraySum;
                 }
             }
 
@@ -381,7 +453,7 @@ namespace Matrix
 
             if (array1.Length != array2.Length)
             {
-                throw new Exception("Arrays did not match sum rules.");
+                throw new Exception("Arrays did not match sum rules");
             }
 
             double[] res = new double[array1.Length];
@@ -403,7 +475,7 @@ namespace Matrix
 
             if (array1.Length != array2.Length)
             {
-                throw new Exception("Arrays did not match multiplication rules.");
+                throw new Exception("Arrays did not match multiplication rules");
             }
 
             double[] res = new double[array1.Length];
@@ -591,6 +663,57 @@ namespace Matrix
             }
 
             return GetDeterminant(new Matrix(resultMatrix));
+        }
+
+        public static Matrix SolveLinearSystem(Matrix a, Matrix b)
+        {
+            //check for Kronecker–Capelli theorem
+            if (a.Rank != a.Augment(b).Rank)
+            {
+                throw new Exception("System was unsolvable");
+            }
+
+            return a.GetInverseMatrix().Multiply(b);
+        }
+
+        public Matrix Augment(Matrix other)
+        {
+            return Augment(this, other);
+        }
+
+        public static Matrix Augment(Matrix m1, Matrix m2)
+        {
+            if (m1 == null || m2 == null)
+            {
+                throw new Exception("Matrix was null");
+            }
+
+            if (m1.Rows != m2.Rows)
+            {
+                throw new Exception("Matrices must have equal number of rows in order to be augmented");
+            }
+
+            double[,] firstMatrix = m1.GetMatrix();
+            double[,] secondMatrix = m2.GetMatrix();
+            double[,] augmentedMatrix = new double[m1.Rows, m1.Columns + m2.Columns];
+
+            for (int j = 0; j < m1.Columns; j++)
+            {
+                for (int i = 0; i < m1.Rows; i++)
+                {
+                    augmentedMatrix[i, j] = firstMatrix[i, j];
+                }
+            }
+
+            for (int j = 0; j < m2.Columns; j++)
+            {
+                for (int i = 0; i < m2.Rows; i++)
+                {
+                    augmentedMatrix[i, j + m1.Columns] = secondMatrix[i, j];
+                }
+            }
+
+            return new Matrix(augmentedMatrix);
         }
 
         public double[,] GetMatrix()
