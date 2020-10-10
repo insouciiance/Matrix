@@ -13,7 +13,24 @@ namespace Matrix
         public int Rows => _matrix.GetLength(0);
         public int Columns => _matrix.GetLength(1);
         public bool IsMatrixSquare => Rows == Columns;
+        public bool IsMatrixZero
+        {
+            get
+            {
+                for (int i = 0; i < this.Rows; i++)
+                {
+                    for (int j = 0; j < this.Columns; j++)
+                    {
+                        if (_matrix[i, j] != 0)
+                        {
+                            return false;
+                        }
+                    }
+                }
 
+                return true;
+            }
+        }
         public bool IsMatrixIdentity
         {
             get
@@ -42,7 +59,6 @@ namespace Matrix
                 return true;
             }
         }
-
         public int Rank => GetRank();
 
         public Matrix(double[,] matrix)
