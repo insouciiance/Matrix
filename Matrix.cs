@@ -13,6 +13,36 @@ namespace Matrix
         public int Rows => _matrix.GetLength(0);
         public int Columns => _matrix.GetLength(1);
         public bool IsMatrixSquare => Rows == Columns;
+
+        public bool IsMatrixIdentity
+        {
+            get
+            {
+                if (!IsMatrixSquare)
+                {
+                    return false;
+                }
+
+                for (int i = 0; i < this.Rows; i++)
+                {
+                    for (int j = 0; j < this.Columns; j++)
+                    {
+                        if (i != j && Math.Abs(_matrix[i, j]) > 0.0001)
+                        {
+                            return false;
+                        }
+
+                        if (i == j && Math.Abs(_matrix[i, j] - 1) > 0.0001)
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            }
+        }
+
         public int Rank => GetRank();
 
         public Matrix(double[,] matrix)
@@ -644,7 +674,7 @@ namespace Matrix
 
             if (m1.Rows != m2.Rows)
             {
-               throw new Exception("Matrices must have equal number of rows in order to be augmented");
+                throw new Exception("Matrices must have equal number of rows in order to be augmented");
             }
 
             double[,] firstMatrix = m1.GetMatrix();
