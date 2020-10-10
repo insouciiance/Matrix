@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
+using System.Threading;
 
 namespace Matrix
 {
@@ -50,7 +51,7 @@ namespace Matrix
             int arrayLength = inputArray.Length;
             int sizeDivider = (int)Math.Sqrt(arrayLength);
 
-            while (sizeDivider > 0) 
+            while (sizeDivider > 0)
             {
                 if (arrayLength % sizeDivider == 0)
                 {
@@ -121,7 +122,7 @@ namespace Matrix
                         if (Math.Abs(new Matrix(matrixPart).GetDeterminant()) > 0.0001)
                         {
                             return true;
-                        } 
+                        }
                     }
                 }
 
@@ -238,7 +239,7 @@ namespace Matrix
         public Matrix Sum(Matrix other)
         {
             return Sum(this, other);
-        } 
+        }
 
         public static Matrix Sum(Matrix m1, Matrix m2)
         {
@@ -293,7 +294,7 @@ namespace Matrix
             }
 
             return new Matrix(resultMatrix);
-        } 
+        }
 
         public Matrix Multiply(Matrix other)
         {
@@ -406,7 +407,7 @@ namespace Matrix
 
             if (array1.Length != array2.Length)
             {
-                throw new Exception("Arrays did not match sum rules.");
+                throw new Exception("Arrays did not match sum rules");
             }
 
             double[] res = new double[array1.Length];
@@ -428,7 +429,7 @@ namespace Matrix
 
             if (array1.Length != array2.Length)
             {
-                throw new Exception("Arrays did not match multiplication rules.");
+                throw new Exception("Arrays did not match multiplication rules");
             }
 
             double[] res = new double[array1.Length];
@@ -620,7 +621,53 @@ namespace Matrix
 
         public static Matrix SolveLinearSystem(Matrix a, Matrix b)
         {
+            //check for Kronecker–Capelli theorem
+            if (a.Rank != a.Augment(b).Rank)
+            {
+                throw new Exception("System was unsolvable");
+            }
+
             return a.GetInverseMatrix().Multiply(b);
+        }
+
+        public Matrix Augment(Matrix other)
+        {
+            return Augment(this, other);
+        }
+
+        public static Matrix Augment(Matrix m1, Matrix m2)
+        {
+            if (m1 == null || m2 == null)
+            {
+                throw new Exception("Matrix was null");
+            }
+
+            if (m1.Rows != m2.Rows)
+            {
+               throw new Exception("Matrices must have equal number of rows in order to be augmented");
+            }
+
+            double[,] firstMatrix = m1.GetMatrix();
+            double[,] secondMatrix = m2.GetMatrix();
+            double[,] augmentedMatrix = new double[m1.Rows, m1.Columns + m2.Columns];
+
+            for (int j = 0; j < m1.Columns; j++)
+            {
+                for (int i = 0; i < m1.Rows; i++)
+                {
+                    augmentedMatrix[i, j] = firstMatrix[i, j];
+                }
+            }
+
+            for (int j = 0; j < m2.Columns; j++)
+            {
+                for (int i = 0; i < m2.Rows; i++)
+                {
+                    augmentedMatrix[i, j + m1.Columns] = secondMatrix[i, j];
+                }
+            }
+
+            return new Matrix(augmentedMatrix);
         }
 
         public double[,] GetMatrix()
