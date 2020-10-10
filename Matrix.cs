@@ -618,6 +618,11 @@ namespace Matrix
             return GetDeterminant(new Matrix(resultMatrix));
         }
 
+        public static Matrix SolveLinearSystem(Matrix a, Matrix b)
+        {
+            return a.GetInverseMatrix().Multiply(b);
+        }
+
         public double[,] GetMatrix()
         {
             int columnsCount = _matrix.GetLength(0);
