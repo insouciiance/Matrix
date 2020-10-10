@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
-using System.Security.Policy;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Matrix
 {
@@ -18,6 +12,7 @@ namespace Matrix
         public int Rows => _matrix.GetLength(0);
         public int Columns => _matrix.GetLength(1);
         public bool IsMatrixSquare => Rows == Columns;
+        public int Rank => GetRank();
 
         public Matrix(double[,] matrix)
         {
@@ -270,6 +265,36 @@ namespace Matrix
             return new Matrix(resultMatrix);
         }
 
+        public Matrix Subtract(Matrix other)
+        {
+            return Subtract(this, other);
+        }
+
+        public static Matrix Subtract(Matrix m1, Matrix m2)
+        {
+            if (m1.Rows != m2.Rows || m1.Columns != m2.Columns)
+            {
+                throw new Exception("Matrix did not match subtraction rules.");
+            }
+
+            double[,] resultMatrix = new double[m1.Rows, m1.Columns];
+
+            for (int i = 0; i < m1.Rows; i++)
+            {
+                double[] firstMatrixRow = GetMatrixRow(m1, i);
+                double[] secondMatrixRow = GetMatrixRow(m2, i).Select(x => -x).ToArray();
+
+                double[] sumArray = SumArrays(firstMatrixRow, secondMatrixRow);
+
+                for (int j = 0; j < sumArray.Length; j++)
+                {
+                    resultMatrix[i, j] = sumArray[j];
+                }
+            }
+
+            return new Matrix(resultMatrix);
+        } 
+
         public Matrix Multiply(Matrix other)
         {
             return Multiply(this, other);
@@ -294,7 +319,7 @@ namespace Matrix
                     double[] multipliedArray = MultiplyArrays(firstMatrixRow, secondMatrixColumn);
                     double multipliedArraySum = multipliedArray.Sum();
 
-                    resultMatrix[i, j] = Math.Round(multipliedArraySum, 10);
+                    resultMatrix[i, j] = multipliedArraySum;
                 }
             }
 
